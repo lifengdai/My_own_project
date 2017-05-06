@@ -53,6 +53,8 @@ void GameEngine::set_selected_cell(int row, int column, QTimer& timer)
 
 void GameEngine::maintain_vaild_cells(int operation, QPair<int, int>& pair)
 {
+    //bool has_the_same = false;
+
     for(int i = 0; i < vaild_cells.size(); i++)
     {
         if(operation == REMOVE)
@@ -65,6 +67,7 @@ void GameEngine::maintain_vaild_cells(int operation, QPair<int, int>& pair)
         }
         else if(operation == APPEND)
         {
+            //has_the_same = (vaild_cells.at(i).get_position().x() == pair.first && vaild_cells.at(i).get_position().y() == pair.second);
             vaild_cells.append(bd.get_a_cell(pair.first, pair.second));
             break;
         }
@@ -73,6 +76,11 @@ void GameEngine::maintain_vaild_cells(int operation, QPair<int, int>& pair)
             break;
         }
     }
+
+    //if(!has_the_same)
+    //{
+        //vaild_cells.append(bd.get_a_cell(pair.first, pair.second));
+    //}
 }
 
 void GameEngine::move(cell& start, cell& goal)
@@ -348,14 +356,20 @@ void GameEngine::check_a_line(cell& base_cell)
         }
     }
 
-    for(int i = 0; i < should_clear.size(); i++)
+    should_clear.removeAll(qMakePair(r, c));
+    should_clear.append(qMakePair(r, c));
+
+    if(should_clear.size() >= MIN_LINE)
     {
-        QPair<int, int> pair = should_clear.at(i);
+        for(int i = 0; i < should_clear.size(); i++)
+        {
+            QPair<int, int> pair = should_clear.at(i);
 
-        bd.get_a_cell(pair.first, pair.second).set_color(NO_COLOR);
-        bd.get_a_cell(pair.first, pair.second).set_real_color(NO_COLOR);
+            bd.get_a_cell(pair.first, pair.second).set_color(NO_COLOR);
+            bd.get_a_cell(pair.first, pair.second).set_real_color(NO_COLOR);
 
-        maintain_vaild_cells(APPEND, pair);
+            maintain_vaild_cells(APPEND, pair);
+        }
     }
 }
 
