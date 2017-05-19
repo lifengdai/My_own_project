@@ -30,6 +30,7 @@ private:
     Ui::MainWindow *ui;
     gameEngine* ge;
     QTimer* timer;
+    bool game_is_started;
 };
 
 #endif // MAINWINDOW_H

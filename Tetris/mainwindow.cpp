@@ -12,34 +12,38 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(timer_start()));
     connect(ui->btn_new, SIGNAL(clicked(bool)), this, SLOT(new_game()));
     setFocusPolicy(Qt::StrongFocus);
+    game_is_started = false;
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent* event)
 {
     int key = event->key();
 
-    switch (key)
+    if(game_is_started)
     {
-    case Qt::Key_Down:
-        timer->setInterval(SLOW_TIME_INTERVAL);
-        break;
-
-    case Qt::Key_Up:
-        if(ge->get_move_down_ok())
+        switch (key)
         {
-            ge->rotate();
-            update();
-        }
-        break;
+        case Qt::Key_Down:
+            timer->setInterval(SLOW_TIME_INTERVAL);
+            break;
 
-    default:
-        break;
+        case Qt::Key_Up:
+            if(ge->get_move_down_ok())
+            {
+                ge->rotate();
+                update();
+            }
+            break;
+
+        default:
+            break;
+        }
     }
 }
 
 void MainWindow::keyPressEvent(QKeyEvent * event)
 {
-    if(ge->get_move_down_ok())
+    if(ge->get_move_down_ok() && game_is_started)
     {
         int key = event->key();
 
@@ -126,10 +130,12 @@ void MainWindow::start_game()
     update();
     ui->btn_start->setEnabled(false);
     timer->start();
+    game_is_started = true;
 }
 
 void MainWindow::new_game()
 {
+    game_is_started = false;
     timer->stop();
 
     delete ge;
