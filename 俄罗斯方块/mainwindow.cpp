@@ -19,7 +19,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent* event)
 {
     int key = event->key();
 
-    if(game_is_started)
+    if(game_is_started && !event->isAutoRepeat())
     {
         switch (key)
         {
@@ -43,7 +43,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent* event)
 
 void MainWindow::keyPressEvent(QKeyEvent * event)
 {
-    if(ge->get_move_down_ok() && game_is_started)
+    if(ge->get_move_down_ok() && game_is_started && !event->isAutoRepeat())
     {
         int key = event->key();
 
